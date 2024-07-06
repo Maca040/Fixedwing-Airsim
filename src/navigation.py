@@ -340,3 +340,70 @@ class WindEstimation:
         except IndexError:
             arithmetic_mean_wind = (0, 0)
         # print(arithmetic_mean_wind)
+
+
+ # CLASE PARA USAR EL BAROMETRO EN NAVEGACIÓN     
+class BarometricSensor:
+    def __init__(self, sim):
+        self.sim = sim
+
+    def read_pressure(self): 
+        return self.sim[prp.pressure_static_true_Pa] #estas propiedades son ilustrativas que deben ser modificadas segun el criterio de la AERODINAMICA 
+
+    def read_temperature(self):
+        return self.sim[prp.temperature_true_C]
+
+    def calculate_altitude(self):
+        # Implementa la fórmula para calcular la altitud basada en la presión
+        # y la temperatura leídas del sensor barométrico.
+        pass        
+
+# CLASE PARA USAR EL  GPS EN NAVEGACIÓN   
+class SensorGPS:
+    def __init__(self, sim):
+        self.sim = sim
+
+    def read_latitude(self):
+        return self.sim[prp.latitude_deg]
+
+    def read_longitude(self):
+        return self.sim[prp.longitude_deg]
+
+    def read_altitude(self):
+        return self.sim[prp.altitude_ft]
+
+    def read_velocity_north(self):
+        return self.sim[prp.velocity_north_fps]
+
+    def read_velocity_east(self):
+        return self.sim[prp.velocity_east_fps]
+    
+# CLASE PARA USAR LA IMU EN NAVEGACIÓN 
+class SensorIMU:
+    def __init__(self, sim):
+        self.sim = sim
+
+    def read_acceleration_x(self):
+        return self.sim[prp.acceleration_body_axis_x_ft_sec2]
+
+    def read_acceleration_y(self):
+        return self.sim[prp.acceleration_body_axis_y_ft_sec2]
+
+    def read_acceleration_z(self):
+        return self.sim[prp.acceleration_body_axis_z_ft_sec2]
+
+    def read_angular_velocity_phi(self):
+        return self.sim[prp.angular_velocity_roll_rad_sec]
+
+    def read_angular_velocity_theta(self):
+        return self.sim[prp.angular_velocity_pitch_rad_sec]
+
+    def read_angular_velocity_psi(self):
+        return self.sim[prp.angular_velocity_yaw_rad_sec]
+    
+    def read_magnetic_field(self):
+        x = self.sim[prp.magnetic_field_body_axis_x_gauss]
+        y = self.sim[prp.magnetic_field_body_axis_y_gauss]
+        z = self.sim[prp.magnetic_field_body_axis_z_gauss]
+        return x, y, z
+    

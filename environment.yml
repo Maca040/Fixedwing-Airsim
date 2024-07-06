@@ -1,4 +1,4 @@
-name: segTorch
+name: jsbsim
 channels:
   - defaults
 dependencies:

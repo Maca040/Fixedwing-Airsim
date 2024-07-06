@@ -1,6 +1,7 @@
+
+import os
 import jsbsim
 import airsim
-import os
 import time
 from typing import Dict, Union
 import jsbsim_properties as prp
@@ -73,8 +74,8 @@ class Simulation:
     """
 
     encoding = 'utf-8'
-    ROOT_DIR = os.path.abspath(r"c:\Users\quessy\Dev\jsbsim")
-
+    ROOT_DIR = os.path.abspath("/home/ingenia/jsbsim")
+    
     def __init__(self,
                  sim_frequency_hz: float = 60.0,
                  aircraft: Aircraft = x8,
@@ -87,7 +88,7 @@ class Simulation:
         self.initialise(self.sim_dt, self.aircraft.jsbsim_id, init_conditions)
         self.fdm.disable_output()
         self.wall_clock_dt = None
-        self.client = self.airsim_connect()
+        #self.client = self.airsim_connect()
 
     def __getitem__(self, prop: Union[prp.BoundedProperty, prp.Property]) -> float:
         return self.fdm[prop.name]
@@ -173,7 +174,7 @@ class Simulation:
         self.set_custom_initial_conditions(init_conditions=init_conditions)
         no_output_reset_mode = 1
         self.fdm.reset_to_initial_conditions(no_output_reset_mode)
-        self.update_airsim()
+        #self.update_airsim()
 
     def run(self) -> bool:
         """

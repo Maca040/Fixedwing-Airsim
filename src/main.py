@@ -9,7 +9,7 @@ from debug_utils import *
 import jsbsim_properties as prp
 from simple_pid import PID
 from autopilot import X8Autopilot
-from navigation import WindEstimation
+from navigation import WindEstimation, BarometricSensor, SensorGPS, SensorIMU #INSTANCIA SENSORES 
 from report_diagrams import ReportGraphs
 from image_processing import AirSimImages, SemanticImageSegmentation
 from typing import Type, Tuple, Dict
@@ -76,6 +76,10 @@ class ClosedLoop:
         self.report: ReportGraphs = ReportGraphs(self.sim)
         self.debug_aero: DebugFDM = DebugFDM(self.sim)
         self.wind_estimate: WindEstimation = WindEstimation(self.sim)
+        self.barometric_sensor: BarometricSensor = BarometricSensor(self.sim) #INSTANCIA SENSOR BAROMETRICO
+        self.gps_sensor: SensorGPS = SensorGPS(self.sim) #INSTANCIA DE SENSOR GPS
+        self.imu_sensor: SensorIMU = SensorIMU(self.sim) #INSTANCIA DE SENSOR IMU
+
         self.over: bool = False
 
     def simulation_loop(self, profile: tuple) -> None:
@@ -126,8 +130,8 @@ class ClosedLoop:
             graphic_update = graphic_i // 1.0
             #  print(graphic_i, graphic_update_old, graphic_update)
             #  print(self.display_graphics)
-            if self.display_graphics and graphic_update > graphic_update_old:
-                self.sim.update_airsim()
+            #if self.display_graphics and graphic_update > graphic_update_old:
+            #    self.sim.update_airsim()
                 # print('update_airsim')
             # elevator = 0.0
             # aileron = 0.0
@@ -207,14 +211,14 @@ def run_simulator_test() -> None:
     :return: None
     """
     sim_frequency = 240
-    env = ClosedLoop(65.0, True, 30, 12, 24, sim_frequency)
+    env = ClosedLoop(65.0, False, 30, 12, 24, sim_frequency)
     env.test_loop()
-    env.generate_figures()
+    #env.generate_figures()
     print('Simulation ended')
 
 
 if __name__ == '__main__':
-    run_simulator()
+    run_simulator_test()
     # run_simulator_test()
 
 
