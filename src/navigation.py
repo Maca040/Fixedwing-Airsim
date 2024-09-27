@@ -343,7 +343,7 @@ class WindEstimation:
 
 
  # CLASE PARA USAR EL BAROMETRO EN NAVEGACIÓN     
-class BarometricSensor:
+'''class BarometricSensor:
     def __init__(self, sim):
         self.sim = sim
 
@@ -405,5 +405,5 @@ class SensorIMU:
         x = self.sim[prp.magnetic_field_body_axis_x_gauss]
         y = self.sim[prp.magnetic_field_body_axis_y_gauss]
         z = self.sim[prp.magnetic_field_body_axis_z_gauss]
-        return x, y, z
+        return x, y, z'''
     

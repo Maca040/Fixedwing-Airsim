@@ -74,13 +74,15 @@ class Simulation:
     """
 
     encoding = 'utf-8'
-    ROOT_DIR = os.path.abspath("/home/ingenia/jsbsim")
+    ROOT_DIR = os.path.abspath("C:/Users/funda2/Documents/jsbsim-master")
     
     def __init__(self,
                  sim_frequency_hz: float = 60.0,
                  aircraft: Aircraft = x8,
                  init_conditions: Dict[prp.Property, float] = None,
                  debug_level: int = 0):
+        self.ROOT_DIR = "C:/Users/funda2/Documents/jsbsim-master"  # Asegúrate de que esta ruta sea correcta
+        print(f"Using JSBSim root directory: {self.ROOT_DIR}")  # Imprime la ruta para verificarla
         self.fdm = jsbsim.FGFDMExec(root_dir=self.ROOT_DIR)
         self.fdm.set_debug_level(debug_level)
         self.sim_dt = 1.0 / sim_frequency_hz
@@ -88,7 +90,7 @@ class Simulation:
         self.initialise(self.sim_dt, self.aircraft.jsbsim_id, init_conditions)
         self.fdm.disable_output()
         self.wall_clock_dt = None
-        #self.client = self.airsim_connect()
+        self.client = self.airsim_connect()
 
     def __getitem__(self, prop: Union[prp.BoundedProperty, prp.Property]) -> float:
         return self.fdm[prop.name]
@@ -143,7 +145,9 @@ class Simulation:
             ic_file = 'basic_ic.xml'
 
         ic_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ic_file)
-        self.fdm.load_ic(ic_path, useStoredPath=False)
+        print(ic_path)
+        print(model_name)
+        self.fdm.load_ic(ic_path, False)
         self.load_model(model_name)
         self.fdm.set_dt(dt)
         self.set_custom_initial_conditions(init_conditions)
@@ -174,7 +178,7 @@ class Simulation:
         self.set_custom_initial_conditions(init_conditions=init_conditions)
         no_output_reset_mode = 1
         self.fdm.reset_to_initial_conditions(no_output_reset_mode)
-        #self.update_airsim()
+        #self.update_()
 
     def run(self) -> bool:
         """

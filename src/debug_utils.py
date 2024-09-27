@@ -175,7 +175,10 @@ class DebugGraphs:
         ax.set_xlabel('Latitude [degs]')
         ax.set_ylabel('Longitude [degs]')
         ax.plot(self.lat, self.long)
-        plt.show()
+        plt.savefig("grafico.png")
+        print("PLOTEE")
+        #plt.show()
+
 
     def trace_plot_abs(self):
         fig, ax = plt.subplots()
