@@ -1,0 +1,18 @@
+{
+  "SimMode": "Multirotor", 
+  "SeeDocsAt": "https://github.com/Microsoft/AirSim/blob/main/docs/settings.md",
+  "SettingsVersion": 1.2 , 
+  "DefaultSensors": {
+    "Barometer": {
+        "SensorType": 1,
+        "Enabled" : true,
+        "PressureFactorSigma": 0.001825,
+        "PressureFactorTau": 3600,
+        "UncorrelatedNoiseSigma": 2.7,
+        "UpdateLatency": 0,
+        "UpdateFrequency": 50,
+        "StartupDelay": 0
+    }
+  }
+}
+ 
