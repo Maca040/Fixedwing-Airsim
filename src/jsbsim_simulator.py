@@ -310,3 +310,10 @@ class Simulation:
         """
         self[prp.gear] = 0.0
         self[prp.gear_all_cmd] = 0.0
+
+    #------------------------------
+    #OBTENER DATOS DEL BARÓMETRO  
+    
+    def getBarometerData(self):
+        barometer_data=self.client.getBarometerData()
+        return barometer_data.altitude  # Accede al valor de altitud

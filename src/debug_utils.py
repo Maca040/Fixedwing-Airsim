@@ -3,7 +3,6 @@ from mpl_toolkits import mplot3d
 import jsbsim_properties as prp
 import math
 
-
 class DebugGraphs:
     def __init__(self, sim):
         self.sim = sim
@@ -46,6 +45,25 @@ class DebugGraphs:
         self.p = []
         self.q = []
         self.r = []
+
+        #SENSORES (inicializo array para guardar datos de sensores):
+        self.barometric_altitude = [] #Barometric Altitude array
+
+    
+    #Funciones que rellenan los arrays con los datos de los sensores.
+    def get_barometric_alt(self):
+        self.barometric_altitude.append(self.sim.getBarometerData())
+
+
+    #Funciones para plotear los datos de los sensores.
+    def barometric_alt_plot(self):
+        fig, ax = plt.subplots()
+        ax.set_title('Barometric Altitude - SENSOR')
+        ax.plot(self.time, self.barometric_altitude)
+        plt.show()
+    
+
+    #--------------------------------------------------------------------------------------
 
     def get_time_data(self):
         self.time.append(self.sim.get_time())

@@ -153,12 +153,15 @@ class ClosedLoop:
             self.get_graph_data()
             self.sim.run()
 
+
     def get_graph_data(self) -> None:
         """
         Gets the information required to produce debug type graphics
 
         :return:
         """
+        self.graph.get_barometric_alt() #INSTANCIA SENSOR BAROMETRICO
+
         self.graph.get_abs_pos_data()
         self.graph.get_airspeed()
         self.graph.get_alpha()
@@ -175,6 +178,8 @@ class ClosedLoop:
 
         :return: None
         """
+        self.graph.barometric_alt_plot() #Ploteo de altitud barométrica
+
         self.graph.control_plot()
         self.graph.trace_plot_abs()
         self.graph.three_d_scene()
@@ -182,21 +187,6 @@ class ClosedLoop:
         self.graph.roll_rate_plot()
         self.graph.roll_rate_plot()
         self.debug_aero.get_pitch_values()
-
-   #OBTENER DATOS DEL BARÓMETRO
-
-    client = airsim.MultirotorClient()
-    client.confirmConnection()
-    client.enableApiControl(True)
-
-    state=client.getMultirotorState()
-    s= pprint.pformat(state) 
-    print("state: %s" % s)
-              
-    barometer_data=client.getBarometerData()
-    s = pprint.pformat(barometer_data)
-    print("barometer_data: %s" % s)
-
 
 
 def run_simulator() -> None:
@@ -209,7 +199,8 @@ def run_simulator() -> None:
     circuit_profile = ((0, 0, 0), (400, 0, 100), (400, 400, 100), (0, 400, 100), (0, 0, 200), (400, 0, 200),
                        (400, 400, 200), (0, 400, 200), (0, 0, 300), (400, 0, 300),
                        (400, 400, 300), (0, 400, 300), (0, 0, 400), (400, 0, 400),
-                       (400, 400, 400), (0, 400, 400))
+                    (400, 400, 400), (0, 400, 400))
+    circuit_profile_mod = ((0, 0, 0), (400, 0, 100), (400, 400, 100))
     ice_profile = ((0, 0, 0), (1200, 0, 0), (1300, 150, 0), (540, 530, -80), (0, 0, -150), (100, 100, -100))
     square = ((0, 0, 0), (1000, 0, 0), (1000, 1000, 0), (0, 1000, 0), (0, 0, 0), (1000, 0, 0), (1000, 1000, 0))
     square_mytest = ((0, 0, 0), (1000, 0, 500), (0, 1000, 0), (-1000, 0, 0), (0, -1000, -500))
@@ -219,10 +210,10 @@ def run_simulator() -> None:
                  (2000, 2000, 20), (-2000, 2000, 20))
     straight = ((0, 0, 0), (2000, 0, 1000), (2000, 2000, 500))
 
-    env.simulation_loop(circuit_profile)
+    env.simulation_loop(circuit_profile_mod)
     env.generate_figures()
     
-    env.report.trace_plot(circuit_profile)
+    env.report.trace_plot(circuit_profile_mod)
     env.report.control_response(0, 750, 240)
     env.report.three_d_plot(300, 750, 240)
     print('Simulation ended')
