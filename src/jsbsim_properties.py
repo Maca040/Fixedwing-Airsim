@@ -20,7 +20,9 @@ class Property(collections.namedtuple('Property', ['name', 'description'])):
 
 
 # position and attitude
-altitude_sl_ft = BoundedProperty('position/h-sl-ft', 'altitude above mean sea level [ft]', -1400, 85000)
+
+#altitude_sl_ft = BoundedProperty('position/h-sl-ft', 'altitude above mean sea level [ft]', -1400, 85000)
+altitude_sl_ft = BoundedProperty('position/h-sl-meters', 'altitude above mean sea level [m]', -1400, 85000) #CAMBIO  a metros  
 pitch_rad = BoundedProperty('attitude/pitch-rad', 'pitch [rad]', -0.5 * math.pi, 0.5 * math.pi)
 roll_rad = BoundedProperty('attitude/roll-rad', 'roll [rad]', -math.pi, math.pi)
 heading_rad = BoundedProperty('attitude/psi-rad', 'yaw [rad', -math.pi, math.pi)
@@ -33,9 +35,10 @@ lat_travel_m = BoundedProperty('position/distance-from-start-lat-mt', 'latitude 
 lng_travel_m = BoundedProperty('position/distance-from-start-lon-mt', 'longitude distance travelled from start [m]',
                                float('-inf'), float('+inf'))
 dist_travel_m = Property('position/distance-from-start-mag-mt', 'distance travelled from starting position [m]')
+
 #AGREGADO PARA QUE  class BarometricSensor-navegation.py FUNCIONE# 
-pressure_static_true_Pa= BoundedProperty('atmosphere/pressure-static-true-Pa', 'static pressure [Pa]', float('-20'), float('+70'))
-temperature_true_C= BoundedProperty('atmosphere/temperature-true-C', 'temperature [C]', float('-inf'), float('+inf'))
+pressure_static_psf= BoundedProperty('atmosphere/P-psf', 'static pressure [psf]', float('-20'), float('+70'))
+#temperature_true_C= BoundedProperty('atmosphere/temperature-true-C', 'temperature [C]', float('-inf'), float('+inf'))
 
 # velocities
 u_fps = BoundedProperty('velocities/u-fps', 'body frame x-axis velocity [ft/s]', -2200, 2200)
@@ -108,7 +111,7 @@ initial_r_radps = Property('ic/r-rad_sec', 'yaw rate [rad/s]')
 initial_roc_fpm = Property('ic/roc-fpm', 'initial rate of climb [ft/min]')
 initial_heading_deg = Property('ic/psi-true-deg', 'initial (true) heading [deg]')
 
-# metrics
+# metrics para calcular Fuerzas y velocidades
 qbar_area = Property('aero/qbar-area', 'dynamic pressure * wing-planform area')
 Sw = Property('metrics/Sw-sqft', 'wing area [sqft]')
 rho = Property('atmosphere/rho-slugs_ft3', 'air density [slug/ft^3]')

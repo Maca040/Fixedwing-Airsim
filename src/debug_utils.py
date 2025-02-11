@@ -46,20 +46,78 @@ class DebugGraphs:
         self.q = []
         self.r = []
 
+        #Agregado de propiedades de JSBSIM que no fueron declarados 
+        self.pressure_sim = []
+        self.alt_pressureAirsim = []
+
+
         #SENSORES (inicializo array para guardar datos de sensores):
         self.barometric_altitude = [] #Barometric Altitude array
+        self.barometric_pressure = [] #Barometric Pressure array
+        self.imu_lineal_acc = [] #IMU Linear Acceleration array
+        self.imu_angular_vel = [] #IMU Angular Velocity array
+    
+
+    #función para llenar el array con las propiedades del simulador
+    def get_pressure_sim(self):
+        pressure_Pa = self.sim.get_static_pressure() #AirSim
+        self.pressure_sim.append(pressure_Pa)
+    
+    #def get_alt_pressure_JSBSim(self):
+     #   pressure_Pa = self.sim[prp.pressure_static_psf] * 47.880258888889 #psf to Pa
+      #  self.alt_pressureJSBSIM.append(44330.77 * (1 - (pressure_Pa / 101325)**(1/5.255))) #Calculo de altitud de presion. En metros.
+
+    def get_alt_pressure_Airsim(self):
+        pressure_Pa = self.sim.get_static_pressure() #AirSim
+        self.alt_pressureAirsim.append(44330.77 * (1 - (pressure_Pa[0] / 101325)**(1/5.255))) #Calculo de altitud de presion. En metros.    
 
     
     #Funciones que rellenan los arrays con los datos de los sensores.
     def get_barometric_alt(self):
-        self.barometric_altitude.append(self.sim.getBarometerData())
+        barometer_data= self.sim.getBarometerData()
+        self.barometric_altitude.append(barometer_data[0])#Barometric Altitude
+
+    def get_barometric_pressure(self):
+        barometer_data= self.sim.getBarometerData()
+        self.barometric_pressure.append(barometer_data[1])#Barometric Pressure    
+
+    def get_imu_lineal_acc(self):
+        imu_data = self.sim.getImuData()
+        self.imu_lineal_acc.append(imu_data[0])#IMU Linear Acceleration
+
+    def get_imu_angular_vel(self):
+        imu_data = self.sim.getImuData()
+        self.imu_angular_vel.append(imu_data[1])#IMU Angular Velocity
 
 
-    #Funciones para plotear los datos de los sensores.
-    def barometric_alt_plot(self):
+    #Funciones para plotear los datos de los sensores y simulador.
+    def barometric_alt_plot(self): #Ploteo de altitud de presión
         fig, ax = plt.subplots()
-        ax.set_title('Barometric Altitude - SENSOR')
+        ax.set_title('Altitude: - Barometric sensor')
         ax.plot(self.time, self.barometric_altitude)
+        plt.grid(True)#agg recien
+        plt.show()
+
+    def alt_pressure_Airsim_plot(self): #Ploteo de altitud de presión de AirSim
+        fig, ax = plt.subplots()
+        ax.set_title('Altitude: - Ideal AirSim ')
+        ax.plot(self.time, self.alt_pressureAirsim)
+        plt.grid(True)
+        plt.show()
+
+
+    def barometric_pressure_plot(self): #Ploteo de presión barométrica
+        fig, ax = plt.subplots()
+        ax.set_title('Pressure: - Barometric sensor ')
+        ax.plot(self.time, self.barometric_pressure)
+        plt.grid(True)#####agg recien
+        plt.show()    
+
+    def pressure_sim_plot(self): #Ploteo de presión del simulador
+        fig, ax = plt.subplots()
+        ax.set_title('Pressure: - AirSim ')
+        ax.plot(self.time, self.pressure_sim) 
+        plt.grid(True)
         plt.show()
     
 

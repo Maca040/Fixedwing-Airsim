@@ -17,6 +17,7 @@ from image_processing import AirSimImages, SemanticImageSegmentation
 from typing import Type, Tuple, Dict
 
 
+
 class ClosedLoop:
     """
     A class to run airsim, JSBSim and join the other classes together
@@ -161,6 +162,11 @@ class ClosedLoop:
         :return:
         """
         self.graph.get_barometric_alt() #INSTANCIA SENSOR BAROMETRICO
+        self.graph.get_alt_pressure_Airsim() #INSTANCIA DE PARAMETRO DE ALTITUD DE Airsim
+
+        self.graph.get_barometric_pressure() #INSTANCIA SENSOR BAROMETRICO
+        self.graph.get_pressure_sim() #INSTANCIA DE PARAMETRO DE PRESION DEL SIMULADOR
+    
 
         self.graph.get_abs_pos_data()
         self.graph.get_airspeed()
@@ -179,14 +185,17 @@ class ClosedLoop:
         :return: None
         """
         self.graph.barometric_alt_plot() #Ploteo de altitud barométrica
-
-        self.graph.control_plot()
-        self.graph.trace_plot_abs()
+        self.graph.alt_pressure_Airsim_plot() #Ploteo de altitud de JSBSim
+        self.graph.barometric_pressure_plot() #Ploteo de presión barométrica
+        self.graph.pressure_sim_plot() #Ploteo de presión de JSBSim
+        
+        #self.graph.control_plot()
+        #self.graph.trace_plot_abs()
         self.graph.three_d_scene()
-        self.graph.pitch_rate_plot()
-        self.graph.roll_rate_plot()
-        self.graph.roll_rate_plot()
-        self.debug_aero.get_pitch_values()
+        #self.graph.pitch_rate_plot()
+        #self.graph.roll_rate_plot()
+        #self.graph.roll_rate_plot()
+        #self.debug_aero.get_pitch_values()
 
 
 def run_simulator() -> None:
@@ -196,11 +205,22 @@ def run_simulator() -> None:
     :return: None
     """
     env = ClosedLoop(750, True)
+    
+    #Trayectoria helicoidal:
+    A = 50 #radio de helicoide 
+    h = 1000 #altura de helicoide
+    N = 10 #número de vueltas
+    t_values = np.linspace(0, 2*np.pi*N, 30) #100 puntos   
+    scale = 10
+
+    helicoid_profile = [(A*np.cos(t) * scale, A*np.sin(t)*scale, h*t/(2*np.pi*N)*scale) for t in t_values]
+
+
     circuit_profile = ((0, 0, 0), (400, 0, 100), (400, 400, 100), (0, 400, 100), (0, 0, 200), (400, 0, 200),
                        (400, 400, 200), (0, 400, 200), (0, 0, 300), (400, 0, 300),
                        (400, 400, 300), (0, 400, 300), (0, 0, 400), (400, 0, 400),
                     (400, 400, 400), (0, 400, 400))
-    circuit_profile_mod = ((0, 0, 0), (400, 0, 100), (400, 400, 100))
+    circuit_profile_mod = ((0, 0, 0), (0, -400, 100), (400, 400, 100))
     ice_profile = ((0, 0, 0), (1200, 0, 0), (1300, 150, 0), (540, 530, -80), (0, 0, -150), (100, 100, -100))
     square = ((0, 0, 0), (1000, 0, 0), (1000, 1000, 0), (0, 1000, 0), (0, 0, 0), (1000, 0, 0), (1000, 1000, 0))
     square_mytest = ((0, 0, 0), (1000, 0, 500), (0, 1000, 0), (-1000, 0, 0), (0, -1000, -500))
@@ -213,9 +233,9 @@ def run_simulator() -> None:
     env.simulation_loop(circuit_profile_mod)
     env.generate_figures()
     
-    env.report.trace_plot(circuit_profile_mod)
+    env.report.trace_plot(helicoid_profile)
     env.report.control_response(0, 750, 240)
-    env.report.three_d_plot(300, 750, 240)
+    env.report.three_d_plot(0, 3500, 240)
     print('Simulation ended')
 
 

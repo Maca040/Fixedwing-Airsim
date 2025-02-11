@@ -80,7 +80,7 @@ class Simulation:
                  sim_frequency_hz: float = 60.0,
                  aircraft: Aircraft = x8,
                  init_conditions: Dict[prp.Property, float] = None,
-                 debug_level: int = 0):
+                 debug_level: int = 2):
         self.ROOT_DIR = "C:/Users/funda2/Documents/jsbsim-master"  # Asegúrate de que esta ruta sea correcta
         print(f"Using JSBSim root directory: {self.ROOT_DIR}")  # Imprime la ruta para verificarla
         self.fdm = jsbsim.FGFDMExec(root_dir=self.ROOT_DIR)
@@ -316,4 +316,20 @@ class Simulation:
     
     def getBarometerData(self):
         barometer_data=self.client.getBarometerData()
-        return barometer_data.altitude  # Accede al valor de altitud
+       # return barometer_data.altitude  # Accede al valor de altitud
+        return [barometer_data.altitude, barometer_data.pressure] #Accede a los valores de altitud y presión
+    
+
+    #OBTENER DATOS DE LA IMU
+    def getImuData(self):
+        imu_data=self.client.getImuData()
+        return [imu_data.angular_velocity, imu_data.linear_acceleration] #Accede a los valores de velocidad angular y aceleración lineal
+    
+
+    #OBTENER LAS PROPIEDADES NATIVAS DE AIRSIM SIN MODELADOS DE SENSOR.
+    def get_static_pressure(self):
+        env_prop = self.client.simGetGroundTruthEnvironment().air_pressure
+        return [env_prop]
+    
+    
+    
