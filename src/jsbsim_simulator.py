@@ -7,6 +7,7 @@ from typing import Dict, Union
 import jsbsim_properties as prp
 from jsbsim_aircraft import Aircraft, cessna172P, x8
 import math
+import numpy as np
 
 """Initially based upon https://github.com/Gor-Ren/gym-jsbsim/blob/master/gym_jsbsim/simulation.py by Gordon Rennie"""
 
@@ -91,6 +92,9 @@ class Simulation:
         self.fdm.disable_output()
         self.wall_clock_dt = None
         self.client = self.airsim_connect()
+
+        self.graph_update_counter = 0
+        self.graph_update_freq = int(sim_frequency_hz / 1)  # Actualizar gráficos a 20 Hz
 
     def __getitem__(self, prop: Union[prp.BoundedProperty, prp.Property]) -> float:
         return self.fdm[prop.name]
@@ -186,10 +190,14 @@ class Simulation:
 
         :return: True if FDM can advance
         """
+        start_time = time.time()
         result = self.fdm.run()
         if self.wall_clock_dt is not None:
             time.sleep(self.wall_clock_dt)
+        end_time = time.time()
+        #print(f"run tomó {end_time - start_time:.4f} segundos")
         return result
+        
 
     def get_time(self) -> float:
         """
@@ -237,12 +245,13 @@ class Simulation:
         client.confirmConnection()
         return client
 
-    def update_airsim(self) -> None:
+    def update_airsim(self ) -> None:
         """
         Update airsim with vehicle pose calculated by JSBSim
 
         :return: None
         """
+        start_time = time.time()
         pose = self.client.simGetVehiclePose()
         position = self.get_local_position()
         pose.position.x_val = position[0]
@@ -251,6 +260,9 @@ class Simulation:
         euler_angles = self.get_local_orientation()
         pose.orientation = airsim.to_quaternion(euler_angles[0], euler_angles[1], euler_angles[2])
         self.client.simSetVehiclePose(pose, False)  # boolean is whether to ignore collisions
+        end_time = time.time()
+        #print(f"update_airsim tomó {end_time - start_time:.4f} segundos")
+
 
     def get_collision_info(self) -> airsim.VehicleClient.simGetCollisionInfo:
         """
@@ -311,6 +323,7 @@ class Simulation:
         self[prp.gear] = 0.0
         self[prp.gear_all_cmd] = 0.0
 
+ 
     #------------------------------
     #OBTENER DATOS DEL BARÓMETRO  
     
@@ -323,13 +336,39 @@ class Simulation:
     #OBTENER DATOS DE LA IMU
     def getImuData(self):
         imu_data=self.client.getImuData()
-        return [imu_data.angular_velocity, imu_data.linear_acceleration] #Accede a los valores de velocidad angular y aceleración lineal
+        angular_velocity = np.array([imu_data.angular_velocity.x_val, imu_data.angular_velocity.y_val, imu_data.angular_velocity.z_val])
+        linear_acceleration = np.array([imu_data.linear_acceleration.x_val, imu_data.linear_acceleration.y_val, imu_data.linear_acceleration.z_val])
+
+        return [angular_velocity, linear_acceleration] #Accede a los valores de velocidad angular y aceleración lineal
+
+    def getMagnetoData(self):
+        magneto_data=self.client.getMagnetometerData()
+        magnetic_field = np.array([magneto_data.magnetic_field_body.x_val, magneto_data.magnetic_field_body.y_val, magneto_data.magnetic_field_body.z_val])
+        return magnetic_field #Accede a los valores del campo magnético
     
+    def get_gps_data(self):
+        gps_data = self.client.getGpsData()
+        geo_point = np.array([gps_data.gnss.geo_point.latitude, gps_data.gnss.geo_point.longitude, gps_data.gnss.geo_point.altitude])
+        gps_velocity = np.array([gps_data.gnss.velocity.x_val, gps_data.gnss.velocity.y_val, gps_data.gnss.velocity.z_val])
+        return [geo_point, gps_velocity]
 
     #OBTENER LAS PROPIEDADES NATIVAS DE AIRSIM SIN MODELADOS DE SENSOR.
     def get_static_pressure(self):
         env_prop = self.client.simGetGroundTruthEnvironment().air_pressure
         return [env_prop]
     
+    def get_angular_velocity_airsim(self):
+        env_prop = self.client.simGetGroundTruthKinematics().angular_velocity
+        return [env_prop.x_val, env_prop.y_val, env_prop.z_val]
+        
+
+    def get_linear_acceleration_airsim(self):
+        env_prop = self.client.simGetGroundTruthKinematics().linear_acceleration
+        return [env_prop.x_val, env_prop.y_val, env_prop.z_val]
     
+    def get_linear_velocity_airsim(self):
+        env_prop = self.client.simGetGroundTruthKinematics().linear_velocity
+        return [env_prop.x_val, env_prop.y_val, env_prop.z_val]
+
+
     

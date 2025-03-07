@@ -36,9 +36,6 @@ lng_travel_m = BoundedProperty('position/distance-from-start-lon-mt', 'longitude
                                float('-inf'), float('+inf'))
 dist_travel_m = Property('position/distance-from-start-mag-mt', 'distance travelled from starting position [m]')
 
-#AGREGADO PARA QUE  class BarometricSensor-navegation.py FUNCIONE# 
-pressure_static_psf= BoundedProperty('atmosphere/P-psf', 'static pressure [psf]', float('-20'), float('+70'))
-#temperature_true_C= BoundedProperty('atmosphere/temperature-true-C', 'temperature [C]', float('-inf'), float('+inf'))
 
 # velocities
 u_fps = BoundedProperty('velocities/u-fps', 'body frame x-axis velocity [ft/s]', -2200, 2200)
@@ -126,21 +123,8 @@ Cmalpha = Property('aero/coefficient/Cmalpha', 'alpha pitch')
 Cmq = Property('aero/coefficient/Cmq', 'pitch rate pitch')
 CmDe = Property('aero/coefficient/CmDe', 'pitch due to elevator')
 
+
 #PROPIEDADES PARA EL FUNCIONAMIENTO DE  IMU
-acceleration_body_axis_x_ft_sec2 = BoundedProperty('accelerations/pilot-x-ft_sec2', 'pilot x-axis acceleration [ft/s^2]', -2200, 2200)
-acceleration_body_axis_y_ft_sec2 = BoundedProperty('accelerations/pilot-y-ft_sec2', 'pilot y-axis acceleration [ft/s^2]', -2200, 2200)
-acceleration_body_axis_z_ft_sec2 = BoundedProperty('accelerations/pilot-z-ft_sec2', 'pilot z-axis acceleration [ft/s^2]', -2200, 2200)
-angular_velocity_roll_rad_sec = BoundedProperty('angular-velocity/roll-rad_sec', 'roll angular velocity [rad/s]', -2 * math.pi, 2 * math.pi)
-angular_velocity_pitch_rad_sec = BoundedProperty('angular-velocity/pitch-rad_sec', 'pitch angular velocity [rad/s]', -2 * math.pi, 2 * math.pi)
-angular_velocity_yaw_rad_sec = BoundedProperty('angular-velocity/yaw-rad_sec', 'yaw angular velocity [rad/s]', -2 * math.pi, 2 * math.pi)
-magnetic_field_body_axis_x_gauss= BoundedProperty('magnetic-field/body-x-gauss', 'magnetic field x-axis [gauss]', float('-inf'), float('+inf'))
-magnetic_field_body_axis_y_gauss= BoundedProperty('magnetic-field/body-y-gauss', 'magnetic field y-axis [gauss]', float('-inf'), float('+inf'))
-magnetic_field_body_axis_z_gauss= BoundedProperty('magnetic-field/body-z-gauss', 'magnetic field z-axis [gauss]', float('-inf'), float('+inf'))
-
-
-# PROPIEDADES PARA EL FUNCIONAMIENTO DE SensorGPS
-latitude_deg = BoundedProperty('position/latitude-deg', 'latitude [deg]', -90, 90)
-longitude_deg = BoundedProperty('position/longitude-deg', 'longitude [deg]', -180, 180)
-altitude_ft = BoundedProperty('position/altitude-ft', 'altitude [ft]', -1400, 85000)
-velocity_north_fps = BoundedProperty('velocities/velocity-north-fps', 'velocity north [ft/s]', float('-inf'), float('+inf'))
-velocity_east_fps = BoundedProperty('velocities/velocity-east-fps', 'velocity east [ft/s]', float('-inf'), float('+inf'))
+acceleration_body_axis_x_ft_sec2 = BoundedProperty('accelerations/a-pilot-x-ft_sec2', 'pilot x-axis acceleration [ft/s^2]', -2200, 2200)#Aceleraciones a-pilot-x-ft_sec2 actualizadas 13/02
+acceleration_body_axis_y_ft_sec2 = BoundedProperty('accelerations/a-pilot-y-ft_sec2', 'pilot y-axis acceleration [ft/s^2]', -2200, 2200) #Aceleraciones a-pilot-y-ft_sec2 actualizadas 13/02
+acceleration_body_axis_z_ft_sec2 = BoundedProperty('accelerations/a-pilot-z-ft_sec2', 'pilot z-axis acceleration [ft/s^2]', -2200, 2200) #Aceleraciones a-pilot-z-ft_sec2 actualizadas 13/02
