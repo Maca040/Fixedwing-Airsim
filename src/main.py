@@ -246,8 +246,8 @@ def run_simulator() -> None:
     
     #Trayectoria helicoidal:
     A = 250 #radio de helicoide 
-    h = 60 #altura de helicoide
-    N = 3 #número de vueltas
+    h = 100 #altura de helicoide
+    N = 2 #número de vueltas
     t_values = np.linspace(0, 2*np.pi*N, 12) #12 puntos hacen una estrella aprox   
     scale = 1
 

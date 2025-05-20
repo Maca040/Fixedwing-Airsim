@@ -117,7 +117,7 @@ class DebugGraphs:
        
         # ANIMACION CON MATPLOTLIB
        #  Crear la figura y ejes UNA SOLA VEZ
-        self.fig, self.axs = plt.subplots(3, 1, figsize=(8, 10))
+        self.fig, self.axs = plt.subplots(3, 1, figsize=(8, 10), gridspec_kw={'height_ratios': [1, 1, 2]})
         self.fig.suptitle('Sensores en tiempo real')
 
         #  Inicializar líneas de los gráficos
@@ -133,6 +133,7 @@ class DebugGraphs:
         self.axs[2].legend()
         self.axs[2].set_ylabel('Longitud')
         self.axs[2].set_xlabel('Latitud')
+        self.axs[2].set_box_aspect(1)
 
 
     
@@ -527,7 +528,7 @@ class DebugGraphs:
         # Update data of the lines in the graph
         self.line_gps_vel_mod.set_data(self.time[-min_length:], self.gps_velocity_mod[-min_length:])   
         self.line_baro.set_data(self.time[-min_length:], self.barometric_altitude[-min_length:])
-        self.line_gps_lat_long.set_data(self.gps_latitude[-min_length:], self.gps_longitude [-min_length:] )
+        self.line_gps_lat_long.set_data(self.gps_latitude[-min_length:], self.gps_longitude [-min_length:])
 
         
         for ax in self.axs:
